@@ -1,0 +1,390 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f5f7fb;
+  color: #1f2937;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 3rem);
+}
+
+header p {
+  margin: 12px auto 0;
+  max-width: 720px;
+  color: #4b5563;
+}
+
+.planner-card {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 1.4fr 0.85fr;
+}
+
+.planner-left,
+.planner-right {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 24px;
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.05);
+}
+
+.days-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.day-button {
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.day-button.selected,
+.day-button:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.assignment-panel h3 {
+  margin-top: 0;
+}
+
+.assigned-meal {
+  margin: 12px 0;
+  padding: 18px;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin: 18px 0;
+}
+
+.filter-row label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+}
+
+.pantry-panel {
+  border: 1px solid #e5e7eb;
+  border-radius: 22px;
+  padding: 18px;
+  background: #f8fafc;
+  margin-bottom: 20px;
+}
+
+.pantry-panel h3 {
+  margin-top: 0;
+}
+
+.hint {
+  color: #6b7280;
+  margin-top: 8px;
+  font-size: 0.95rem;
+}
+
+select {
+  width: auto;
+  min-width: 140px;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-top: 8px;
+  background: #ffffff;
+}
+
+.meal-list {
+  display: grid;
+  gap: 12px;
+}
+
+.meal-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.meal-select-button {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 16px;
+  background: #ffffff;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.meal-category,
+.meal-tags {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.meal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.icon-button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #f8fafc;
+  color: #374151;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.icon-button:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.icon-button.active {
+  border-color: #4338ca;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.icon-button.delete {
+  border-color: #fee2e2;
+  background: #fff1f2;
+  color: #b91c1c;
+}
+
+.icon-button.details {
+  background: #f3f4f6;
+}
+
+.meal-detail-card {
+  display: grid;
+  gap: 24px;
+}
+
+.meal-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.add-meal-card {
+  display: grid;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.meal-meta-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.pill {
+  display: inline-flex;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #1e3a8a;
+  font-size: 0.85rem;
+}
+
+.favorite-pill {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.meal-image {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 1px solid #e5e7eb;
+}
+
+.meal-detail-body label {
+  display: block;
+  margin-bottom: 16px;
+  color: #374151;
+}
+
+.recipe-textarea {
+  width: 100%;
+  min-height: 160px;
+  border: 1px solid #d1d5db;
+  border-radius: 18px;
+  padding: 14px;
+  resize: vertical;
+  margin-top: 8px;
+}
+
+.alternative-panel {
+  padding: 18px;
+  border-radius: 22px;
+  background: #f8fafc;
+  border: 1px solid #e5e7eb;
+}
+
+.alternative-panel h3 {
+  margin-top: 0;
+}
+
+.alternative-input-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.suggestion-list {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 14px;
+  background: #ffffff;
+}
+
+.save-message {
+  color: #16a34a;
+  margin-top: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 16px;
+  color: #374151;
+}
+
+input[type='text'],
+input[type='search'],
+input[type='file'],
+textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-top: 8px;
+}
+
+button.primary {
+  width: 100%;
+  background: #4338ca;
+  color: white;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button.primary:hover {
+  background: #3730a3;
+}
+
+button.secondary {
+  width: 100%;
+  background: #eef2ff;
+  color: #1e3a8a;
+  border: 1px solid #c7d2fe;
+  border-radius: 14px;
+  padding: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  margin-top: 16px;
+}
+
+button.secondary:hover {
+  background: #e0e7ff;
+}
+
+.schedule-preview {
+  margin-top: 28px;
+}
+
+.schedule-preview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.schedule-preview li {
+  border-top: 1px solid #e5e7eb;
+  padding: 12px 0;
+}
+
+.schedule-preview li:first-child {
+  border-top: none;
+}
+
+@media (max-width: 900px) {
+  .planner-card {
+    grid-template-columns: 1fr;
+  }
+
+  .meal-card {
+    grid-template-columns: 1fr;
+  }
+
+  .alternative-input-row {
+    grid-template-columns: 1fr;
+  }
+}
