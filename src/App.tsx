@@ -1,4 +1,6 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import Papa, { ParseResult } from 'papaparse';
+import mealsData from './data/meals.json';
 
 type Meal = {
   id: string;
@@ -8,6 +10,14 @@ type Meal = {
   favorite: boolean;
   tags: string[];
   recipe?: string;
+  protein?: string;
+  cuisine?: string;
+  prep_time?: string;
+  difficulty?: string;
+  estimated_cost?: string;
+  servings?: string;
+  family_favorite?: string;
+  family_member?: string;
 };
 
 const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -15,54 +25,15 @@ const storageKeyMeals = 'washington-walker-meals';
 const storageKeySchedule = 'washington-walker-schedule';
 const storageKeyPantry = 'washington-walker-pantry';
 
-const initialMeals: Meal[] = [
-  {
-    id: 'meal-1',
-    name: 'Baked Chicken with Veggies',
-    category: 'Dinner',
-    favorite: true,
-    tags: ['Family favorite', 'Easy'],
-    image: 'https://via.placeholder.com/360x220?text=Baked+Chicken',
-    recipe: 'Roast chicken with mixed vegetables, garlic, and herbs. Serve with a side salad.',
-  },
-  {
-    id: 'meal-2',
-    name: 'Spaghetti and Meatballs',
-    category: 'Comfort',
-    favorite: true,
-    tags: ['Comfort', 'Quick'],
-    image: 'https://via.placeholder.com/360x220?text=Spaghetti',
-    recipe: 'Prepare meatballs, simmer in tomato sauce, and serve over spaghetti with parmesan.',
-  },
-  {
-    id: 'meal-3',
-    name: 'Taco Night',
-    category: 'Fun',
-    favorite: false,
-    tags: ['Fun', 'Build your own'],
-    image: 'https://via.placeholder.com/360x220?text=Tacos',
-    recipe: 'Set out tortillas, seasoned meat or beans, and toppings for a family taco bar.',
-  },
-  {
-    id: 'meal-4',
-    name: 'Vegetable Stir Fry',
-    category: 'Vegetarian',
-    favorite: false,
-    tags: ['Healthy', 'Vegetarian'],
-    image: 'https://via.placeholder.com/360x220?text=Stir+Fry',
-    recipe: 'Stir fry colorful vegetables with a savory sauce and serve over rice or noodles.',
-  },
-];
-
 function loadMeals(): Meal[] {
   const stored = localStorage.getItem(storageKeyMeals);
-  if (!stored) return initialMeals;
+  if (!stored) return mealsData as Meal[];
 
   try {
     const parsed = JSON.parse(stored) as Meal[];
-    return Array.isArray(parsed) ? parsed : initialMeals;
+    return Array.isArray(parsed) ? parsed : mealsData as Meal[];
   } catch {
-    return initialMeals;
+    return mealsData as Meal[];
   }
 }
 
@@ -137,7 +108,7 @@ function App() {
   const [meals, setMeals] = useState<Meal[]>(() => loadMeals());
   const [selectedDay, setSelectedDay] = useState<string>(daysOfWeek[0]);
   const [schedule, setSchedule] = useState<Record<string, string>>(() => loadSchedule());
-  const [activeMealId, setActiveMealId] = useState<string>(initialMeals[0].id);
+  const [activeMealId, setActiveMealId] = useState<string>((mealsData as Meal[])[0].id);
   const [newMeal, setNewMeal] = useState('');
   const [newCategory, setNewCategory] = useState('Dinner');
   const [newTags, setNewTags] = useState('');
@@ -147,6 +118,9 @@ function App() {
   const [suggestions, setSuggestions] = useState<Meal[]>([]);
   const [recipeDraft, setRecipeDraft] = useState('');
   const [saveMessage, setSaveMessage] = useState('');
+  const [csvMessage, setCsvMessage] = useState('');
+  const [selectedProtein, setSelectedProtein] = useState('');
+  const [showCsvImport, setShowCsvImport] = useState(true);
   const [pantryText, setPantryText] = useState(() => loadPantry());
 
   const activeMeal = meals.find((meal) => meal.id === activeMealId) ?? meals[0];
@@ -173,14 +147,28 @@ function App() {
     [meals]
   );
 
+  const proteins = useMemo(
+    () => ['All', ...Array.from(new Set(meals.map((meal) => meal.protein).filter(Boolean)))],
+    [meals]
+  );
+
   const availableMeals = useMemo(
     () =>
       meals.filter(
         (meal) =>
           (!showFavoritesOnly || meal.favorite) &&
-          (categoryFilter === 'All' || meal.category === categoryFilter)
+          (categoryFilter === 'All' || meal.category === categoryFilter) &&
+          (!selectedProtein || meal.protein === selectedProtein)
       ),
-    [meals, showFavoritesOnly, categoryFilter]
+    [meals, showFavoritesOnly, categoryFilter, selectedProtein]
+  );
+
+  const filteredMeals = useMemo(
+    () =>
+      selectedProtein
+        ? meals.filter((meal) => meal.protein === selectedProtein)
+        : [],
+    [meals, selectedProtein]
   );
 
   const assignMeal = (mealId: string) => {
@@ -265,6 +253,59 @@ function App() {
     window.setTimeout(() => setSaveMessage(''), 2000);
   };
 
+  const handleCsvUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    Papa.parse(file, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results: ParseResult<Record<string, string>>) => {
+        const rows = results.data as Record<string, string>[];
+        const importedMeals: Meal[] = rows.map((row, index) => {
+          const name = row.meal_name?.trim() || `Imported Meal ${index + 1}`;
+          const category = row.category?.trim() || 'Dinner';
+          const favorite = String(row.family_favorite).trim().toLowerCase() === 'yes';
+          const existingTags = String(row.tags).split(',').map(t => t.trim()).filter(Boolean);
+          const additionalTags = [row.protein, row.cuisine, row.difficulty, row['Family Member']].filter(Boolean).map(t => t.trim());
+          const tags = [...existingTags, ...additionalTags];
+          const image = 'https://via.placeholder.com/360x220?text=' + encodeURIComponent(name);
+          const recipe = row.ingredients?.trim() || '';
+
+          return {
+            id: `meal-csv-${Date.now()}-${index}`,
+            name,
+            category,
+            favorite,
+            tags,
+            image,
+            recipe,
+            protein: row.protein?.trim() || '',
+            cuisine: row.cuisine?.trim() || '',
+            prep_time: row.prep_time?.trim() || '',
+            difficulty: row.difficulty?.trim() || '',
+            estimated_cost: row.estimated_cost?.trim() || '',
+            servings: row.servings?.trim() || '',
+            family_favorite: row.family_favorite?.trim() || '',
+            family_member: row['Family Member']?.trim() || '',
+          };
+        });
+
+        if (importedMeals.length === 0) {
+          setCsvMessage('No meals found in the CSV file.');
+          return;
+        }
+
+        setMeals((current) => [...current, ...importedMeals]);
+        setCsvMessage(`Imported ${importedMeals.length} meals from CSV.`);
+        window.setTimeout(() => setCsvMessage(''), 4000);
+      },
+      error: (error: Error) => {
+        setCsvMessage(`CSV import failed: ${error.message}`);
+      },
+    });
+  };
+
   const suggestAlternatives = () => {
     setSuggestions(generateAlternativeSuggestions(activeMeal, alternativeNeed, meals));
   };
@@ -279,7 +320,73 @@ function App() {
       <header>
         <h1>Washington-Walker Family Food Planner</h1>
         <p>Build a family-friendly weekly meal plan with recipes, uploads, pantry checks, and smart alternatives.</p>
+        <button type="button" className="settings-button" onClick={() => setShowCsvImport(!showCsvImport)}>
+          ⚙️ {showCsvImport ? 'Hide' : 'Show'} CSV Import
+        </button>
       </header>
+
+      <nav className="tabs">
+        <button type="button">Home</button>
+        <button type="button">Family Favorites</button>
+        <button type="button">Recipe Book</button>
+        <button type="button">Grocery List</button>
+      </nav>
+
+      <section className="verse-card">
+        <p className="verse-text">
+          "Taste and see that the Lord is good; blessed is the one who takes refuge in Him."
+        </p>
+
+        <p className="verse-reference">
+          Psalm 34:8
+        </p>
+      </section>
+
+      <section className="protein-section">
+        <h2>Pick Your Protein</h2>
+
+        <div className="protein-buttons">
+          <button type="button" onClick={() => setSelectedProtein('Chicken')}>
+            🍗 Chicken
+          </button>
+
+          <button type="button" onClick={() => setSelectedProtein('Shrimp')}>
+            🍤 Shrimp
+          </button>
+
+          <button type="button" onClick={() => setSelectedProtein('Salmon')}>
+            🐟 Salmon
+          </button>
+
+          <button type="button" onClick={() => setSelectedProtein('Turkey')}>
+            🦃 Turkey
+          </button>
+
+          <button type="button" onClick={() => setSelectedProtein('Beef')}>
+            🥩 Beef
+          </button>
+
+          <button type="button" onClick={() => setSelectedProtein('Vegetarian')}>
+            🌱 Vegetarian
+          </button>
+        </div>
+
+        <div className="meal-results">
+          {filteredMeals.map((meal, index) => (
+            <div className="meal-card" key={index}>
+              <h3>{meal.name}</h3>
+
+              <p>{meal.cuisine}</p>
+
+              <p>
+                {meal.prep_time} mins • {meal.difficulty}
+              </p>
+
+              <p>${meal.estimated_cost}</p>
+            </div>
+          ))}
+        </div>
+      </section>
 
       <section className="planner-card">
         <div className="planner-left">
@@ -317,6 +424,16 @@ function App() {
                   {categories.map((category) => (
                     <option key={category} value={category}>
                       {category}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label>
+                Protein
+                <select value={selectedProtein} onChange={(event) => setSelectedProtein(event.target.value)}>
+                  {proteins.map((protein) => (
+                    <option key={protein} value={protein === 'All' ? '' : protein}>
+                      {protein}
                     </option>
                   ))}
                 </select>
@@ -425,6 +542,18 @@ function App() {
               Add meal
             </button>
           </div>
+
+          {showCsvImport && (
+            <div className="add-meal-card">
+              <h2>Import Meals from CSV</h2>
+              <label>
+                Upload CSV file
+                <input type="file" accept=".csv" onChange={handleCsvUpload} />
+              </label>
+              <p className="hint">CSV columns should include: id, name, category, favorite, tags, image, recipe.</p>
+              {csvMessage && <p className="save-message">{csvMessage}</p>}
+            </div>
+          )}
 
           <div className="meal-detail-card">
             <div className="meal-detail-header">

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "meal-1",
+    "name": "Baked Chicken with Veggies",
+    "category": "Dinner",
+    "favorite": true,
+    "tags": ["Family favorite", "Easy"],
+    "image": "https://via.placeholder.com/360x220?text=Baked+Chicken",
+    "recipe": "Roast chicken with mixed vegetables, garlic, and herbs. Serve with a side salad.",
+    "protein": "Chicken"
+  },
+  {
+    "id": "meal-2",
+    "name": "Spaghetti and Meatballs",
+    "category": "Comfort",
+    "favorite": true,
+    "tags": ["Comfort", "Quick"],
+    "image": "https://via.placeholder.com/360x220?text=Spaghetti",
+    "recipe": "Prepare meatballs, simmer in tomato sauce, and serve over spaghetti with parmesan.",
+    "protein": "Turkey"
+  },
+  {
+    "id": "meal-3",
+    "name": "Taco Night",
+    "category": "Fun",
+    "favorite": false,
+    "tags": ["Fun", "Build your own"],
+    "image": "https://via.placeholder.com/360x220?text=Tacos",
+    "recipe": "Set out tortillas, seasoned meat or beans, and toppings for a family taco bar.",
+    "protein": "Beef"
+  },
+  {
+    "id": "meal-4",
+    "name": "Vegetable Stir Fry",
+    "category": "Vegetarian",
+    "favorite": false,
+    "tags": ["Healthy", "Vegetarian"],
+    "image": "https://via.placeholder.com/360x220?text=Stir+Fry",
+    "recipe": "Stir fry colorful vegetables with a savory sauce and serve over rice or noodles.",
+    "protein": "Vegetarian"
+  }
+]

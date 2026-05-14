@@ -3,16 +3,26 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
+  "description": "A React + Vite web app for the Washington-Walker family to plan weekly meals and discover recipes with protein filtering and CSV import capabilities",
+  "author": "Victoria Washington-Walker",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/family-food-planner.git"
+  },
+  "keywords": ["meal-planning", "recipe", "family", "react", "vite"],
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "papaparse": "^5.5.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
+    "@types/papaparse": "^5.5.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^4.1.0",

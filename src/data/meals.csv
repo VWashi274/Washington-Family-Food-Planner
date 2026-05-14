@@ -1,0 +1,5 @@
+id,name,category,favorite,tags,image,recipe
+meal-1,Baked Chicken with Veggies,Dinner,true,"Family favorite;Easy",https://via.placeholder.com/360x220?text=Baked+Chicken,"Roast chicken with mixed vegetables, garlic, and herbs. Serve with a side salad."
+meal-2,Spaghetti and Meatballs,Comfort,true,"Comfort;Quick",https://via.placeholder.com/360x220?text=Spaghetti,"Prepare meatballs, simmer in tomato sauce, and serve over spaghetti with parmesan."
+meal-3,Taco Night,Fun,false,"Fun;Build your own",https://via.placeholder.com/360x220?text=Tacos,"Set out tortillas, seasoned meat or beans, and toppings for a family taco bar."
+meal-4,Vegetable Stir Fry,Vegetarian,false,"Healthy;Vegetarian",https://via.placeholder.com/360x220?text=Stir+Fry,"Stir fry colorful vegetables with a savory sauce and serve over rice or noodles."
