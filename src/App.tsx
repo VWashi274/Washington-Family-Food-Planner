@@ -1,6 +1,10 @@
 import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import Papa, { ParseResult } from 'papaparse';
-import mealsData from './data/meals.json';
+import meals from './data/meals.json'
+
+
+
+
 
 type Meal = {
   id: string;
@@ -27,13 +31,13 @@ const storageKeyPantry = 'washington-walker-pantry';
 
 function loadMeals(): Meal[] {
   const stored = localStorage.getItem(storageKeyMeals);
-  if (!stored) return mealsData as Meal[];
+  if (!stored) return meals as Meal[];
 
   try {
     const parsed = JSON.parse(stored) as Meal[];
-    return Array.isArray(parsed) ? parsed : mealsData as Meal[];
+    return Array.isArray(parsed) ? parsed : meals as Meal[];
   } catch {
-    return mealsData as Meal[];
+    return meals as Meal[];
   }
 }
 
@@ -108,7 +112,7 @@ function App() {
   const [meals, setMeals] = useState<Meal[]>(() => loadMeals());
   const [selectedDay, setSelectedDay] = useState<string>(daysOfWeek[0]);
   const [schedule, setSchedule] = useState<Record<string, string>>(() => loadSchedule());
-  const [activeMealId, setActiveMealId] = useState<string>((mealsData as Meal[])[0].id);
+  const [activeMealId, setActiveMealId] = useState<string>((meals as Meal[])[0].id);
   const [newMeal, setNewMeal] = useState('');
   const [newCategory, setNewCategory] = useState('Dinner');
   const [newTags, setNewTags] = useState('');
@@ -637,4 +641,3 @@ function App() {
 }
 
 export default App;
-

@@ -520,18 +520,21 @@ button.secondary:hover {
   }
   body {
   margin: 0;
-  padding: 0;
-  background-color: #E8D8A8;
+  padding: 30px;
+
+  background-color: #DCCB9F;
+
   background-image:
     repeating-linear-gradient(
       to bottom,
       transparent,
-      transparent 34px,
-      rgba(92, 64, 51, 0.08) 35px
+      transparent 35px,
+      rgba(92,64,51,0.05) 36px
     );
+
   color: #5C4033;
+
   font-family: 'Poppins', sans-serif;
-  } 
 }
 .content-card {
   background: #FFF9E8;
@@ -659,4 +662,78 @@ h1, h2, h3 {
     0 4px 10px rgba(0,0,0,0.08);
 
   transition: 0.2s ease;
+}
+.app-container {
+  max-width: 1400px;
+  margin: 40px auto;
+  background: #FDF6E3;
+
+  border-radius: 24px;
+
+  padding: 40px;
+
+  position: relative;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.18),
+    inset 0 0 50px rgba(92,64,51,0.08);
+
+  border: 1px solid rgba(92,64,51,0.12);}
+
+  .meal-card {
+  background: #FFF8E7;
+
+  border-radius: 16px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 6px 14px rgba(0,0,0,0.12);
+
+  border: 1px solid rgba(92,64,51,0.08);
+
+  position: relative;
+
+  transition: 0.2s ease;
+}
+.meal-card:hover {
+  transform: translateY(-4px);
+}
+
+.tabs button {
+  background: #D9C29C;
+
+  border: none;
+
+  border-radius: 14px 14px 0 0;
+
+  padding: 16px 30px;
+
+  font-family: 'Playfair Display', serif;
+
+  font-size: 20px;
+
+  color: #5C4033;
+
+  box-shadow:
+    0 4px 10px rgba(0,0,0,0.12);
+
+  transition: 0.2s ease;
+}
+.verse-card {
+  background: #F6E7BC;
+
+  width: 340px;
+
+  margin: 30px auto;
+
+  padding: 30px;
+
+  border-radius: 8px;
+
+  transform: rotate(-2deg);
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,0.18);
+}
 }
